@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Website Generator</title>
+  <style>
+    /* Wacky Neo-Brutalism Theme (Adapts to Light/Dark Mode) */
+    :root {
+      --bg-color: #fce7f3; /* Pink muda */
+      --pattern-color: #fbcfe8;
+      --container-bg: #ffffff;
+      --text-color: #000000;
+      --border-color: #000000;
+      --shadow-color: #000000;
+      --btn-bg: #fde047; /* Kuning terang */
+      --btn-hover: #facc15;
+      --link-color: #2563eb;
+      --link-hover-bg: #dbeafe;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #0f172a; /* Biru sangat gelap */
+        --pattern-color: #1e293b;
+        --container-bg: #1e293b;
+        --text-color: #f8fafc;
+        --border-color: #f8fafc;
+        --shadow-color: #38bdf8; /* Cyan neon sebagai bayangan */
+        --btn-bg: #ec4899; /* Pink terang */
+        --btn-hover: #db2777;
+        --link-color: #38bdf8;
+        --link-hover-bg: #0c4a6e;
+      }
+    }
+
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', system-ui, sans-serif;
+      background-color: var(--bg-color);
+      /* Pola polkadot untuk mengisi ruang kosong */
+      background-image: radial-gradient(var(--pattern-color) 3px, transparent 3px);
+      background-size: 40px 40px;
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      background-color: var(--container-bg);
+      padding: 4rem 2rem;
+      border-radius: 16px;
+      border: 6px solid var(--border-color);
+      /* Bayangan tebal ala Neo-Brutalism */
+      box-shadow: 16px 16px 0 var(--shadow-color);
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      transition: box-shadow 0.3s, transform 0.3s, background-color 0.3s;
+    }
+
+    /* Animasi melayang sedikit saat di-hover */
+    .container:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 20px 20px 0 var(--shadow-color);
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      line-height: 1.1;
+      text-shadow: 3px 3px 0 var(--shadow-color);
+      color: var(--container-bg);
+      -webkit-text-stroke: 2px var(--border-color);
+    }
+
+    .result-box {
+      min-height: 120px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-color);
+      border: 4px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    a#website-link {
+      color: var(--link-color);
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      word-break: break-all;
+      display: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    a#website-link:hover {
+      background-color: var(--link-hover-bg);
+      transform: scale(1.05) rotate(-2deg);
+      text-decoration: underline wavy var(--link-color) 3px;
+    }
+
+    button {
+      background-color: var(--btn-bg);
+      color: var(--text-color);
+      border: 5px solid var(--border-color);
+      box-shadow: 8px 8px 0 var(--border-color);
+      padding: 1rem 3rem;
+      font-size: 1.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.1s ease-in-out;
+      font-family: inherit;
+    }
+
+    /* Efek memantul (squish) saat tombol ditekan */
+    button:active {
+      transform: translate(6px, 6px);
+      box-shadow: 2px 2px 0 var(--border-color);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: translate(8px, 8px);
+      box-shadow: 0 0 0 var(--border-color);
+    }
+
+    #loading-text {
+      display: none;
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--text-color);
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.7; }
+      to { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Responsif untuk layar HP */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      a#website-link { font-size: 1.5rem; }
+      button { font-size: 1.25rem; padding: 1rem 2rem; }
+      .container { padding: 2rem 1rem; box-shadow: 10px 10px 0 var(--shadow-color); border-width: 4px; }
+      .container:hover { box-shadow: 12px 12px 0 var(--shadow-color); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Random<br>Web Link</h1>
+    
+    <div class="result-box">
+      <span id="loading-text">Loading...</span>
+      <a href="#" id="website-link" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+
+    <button id="generate-btn" onclick="generateLink()">Go!</button>
+  </div>
+
+  <script>
+    async function generateLink() {
+      const btn = document.getElementById('generate-btn');
+      const linkEl = document.getElementById('website-link');
+      const loadingEl = document.getElementById('loading-text');
+
+      // Animasi loading
+      btn.disabled = true;
+      btn.textContent = 'Wait...';
+      linkEl.style.display = 'none';
+      loadingEl.style.display = 'block';
+
+      try {
+        // PENTING: Ganti URL di bawah dengan URL Vercel milikmu
+        const vercelAPIUrl = 'https://website-lists.vercel.app/api/get-link';
+        
+        const response = await fetch(vercelAPIUrl);
+        const data = await response.json();
+
+        if (response.ok) {
+          linkEl.href = data.link;
+          
+          // Hapus protokol agar tampilan teks lebih ringkas
+          let displayText = data.link.replace(/^https?:\/\//, '');
+          linkEl.textContent = displayText;
+          
+          linkEl.style.display = 'inline-block';
+        } else {
+          alert('Error: ' + (data.error || 'Something went wrong!'));
+        }
+      } catch (error) {
+        alert('Failed to connect! Check your Vercel URL in the code.');
+      } finally {
+        loadingEl.style.display = 'none';
+        btn.disabled = false;
+        btn.textContent = 'Go Wacky!';
+      }
+    }
+  </script>
+
+</body>
+</html>
